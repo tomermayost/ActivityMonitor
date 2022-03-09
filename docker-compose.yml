@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  postgresql:
+    image: postgres:14
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: s3cret
+      POSTGRES_DB: appdb
+    networks:
+      - tomernet
+networks:
+  tomernet:
