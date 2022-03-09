@@ -9,3 +9,15 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Event {
+  id         Int      @id @default(autoincrement())
+  type       String
+  page       String
+  user       String
+  element_id String   @unique
+  createdAt  DateTime @default(now())
+
+  @@index([user])
+  @@index([createdAt])
+}
