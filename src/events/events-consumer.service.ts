@@ -5,14 +5,13 @@ import { DatabaseService } from '../database/database.service';
 
 @Processor(Queues.EventsQueue)
 export class EventsConsumerService {
-    constructor(private eventService: DatabaseService) { }
+    constructor(private dbService: DatabaseService) { }
 
     @Process(Queues.JobName)
     async fetchAndStoreNextEvent(job: Job) {
-
-        await this.eventService.createEvent(JSON.parse(job.data));
+        await this.dbService.createEvent(JSON.parse(job.data));
         console.log(
-            `Processing ${job.name} with job-id ${job.id} and data ${job.data}`,
+            `Processed ${job.name} with job-id ${job.id} and data ${job.data}`,
         );
     }
 

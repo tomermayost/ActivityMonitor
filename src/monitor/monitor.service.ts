@@ -8,7 +8,7 @@ import { EventDto } from './dto';
 export class MonitorService {
     constructor(
         private eventsProducer: EventsProducerService,
-        private eventService: DatabaseService
+        private dbServeice: DatabaseService
     ) { }
 
     async registerEvent(dto: EventDto) {
@@ -27,10 +27,10 @@ export class MonitorService {
     }
 
     async getEvents() {
-        return await this.eventService.getEventCountByUser();
+        return await this.dbServeice.getEventCountByUser();
     }
 
     async getAllEvents() {
-        return await this.eventService.getAllEvents();
+        return await this.dbServeice.getAllEvents();
     }
 }

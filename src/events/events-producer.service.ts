@@ -9,8 +9,7 @@ export class EventsProducerService {
     constructor(@InjectQueue(Queues.EventsQueue) private eventsQueue: Queue) { }
 
     async produceEvent(event: EventDto) {
-        const data = JSON.stringify(event);
-        await this.eventsQueue.add(Queues.JobName, data)
+        await this.eventsQueue.add(Queues.JobName, JSON.stringify(event))
     }
 
 }
