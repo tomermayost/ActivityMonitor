@@ -9,7 +9,6 @@ export class MonitorController {
     @Post('event')
     async registerEvent(@Body() dto: EventDto) {
         await this.monitorService.registerEvent(dto);
-        delete dto.summable;
         return dto;
     }
 

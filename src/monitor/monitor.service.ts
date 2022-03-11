@@ -13,16 +13,15 @@ export class MonitorService {
 
     async registerEvent(dto: EventDto) {
         try {
-            enrichEventWithTimestampAndsumFieldForEasierQueryLater();
+            enrichEventWithTimestamp();
             await this.eventsProducer.produceEvent(dto)
         } catch (err) {
             console.log(err)
             throw new InternalServerErrorException("something went wrong.. please check the logs for further details");
         }
 
-        function enrichEventWithTimestampAndsumFieldForEasierQueryLater() {
+        function enrichEventWithTimestamp() {
             dto.timestamp = new Date();
-            dto.summable = 1;
         }
     }
 

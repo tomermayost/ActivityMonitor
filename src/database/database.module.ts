@@ -5,8 +5,6 @@ import { Event, EventSchema } from './schema/event.schema';
 import { Queues } from '../utils/queues.enum';
 import { DatabaseService } from './database.service';
 
-
-
 @Module({
   imports: [BullModule.registerQueue({
     name: Queues.EventsQueue,

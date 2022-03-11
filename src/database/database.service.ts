@@ -19,7 +19,7 @@ export class DatabaseService {
     async getEventCountByUser() {
         return await this.eventModel.aggregate([
             { $match: {} },
-            { $group: { _id: '$user', total: { $sum: '$summable' } } },
+            { $group: { _id: '$user', total: { $sum: 1 } } },
             { $project: { 'user': '$_id', 'total': 1, '_id': 0 } }
         ]);
     }

@@ -19,9 +19,6 @@ export class Event {
 
     @Prop({ type: Date, default: Date.now, index: true })
     timestamp: Date;
-
-    @Prop({ type: Number, default: 1 })
-    summable: number
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);
