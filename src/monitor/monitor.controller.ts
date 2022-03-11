@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { EventDto } from './dto';
 import { MonitorService } from './monitor.service';
 
@@ -6,19 +6,25 @@ import { MonitorService } from './monitor.service';
 export class MonitorController {
     constructor(private monitorService: MonitorService) { }
 
-    @Post('event')
+    @Post('events')
     async registerEvent(@Body() dto: EventDto) {
-        await this.monitorService.registerEvent(dto);
+        await this.monitorService.queueEvent(dto);
         return dto;
     }
 
-    @Get('event')
-    async getEvents() {
-        return await this.monitorService.getEvents()
+    @Get('events/user')
+    async getEventsPerUser(
+        @Query('skip') skip: string, @Query('limit') limit: string) {
+        return await this.monitorService.getEventsPerUser({ skip: parseInt(skip), limit: parseInt(limit) })
     }
 
-    @Get('event/all')
-    async getAllEvents() {
-        return await this.monitorService.getAllEvents()
+    @Get('events/avg_epm')
+    async getAvgEventsPerMinute() {
+        return await this.monitorService.getAvgEventsPerMinute()
+    }
+
+    @Get('user/visits')
+    async getUsersVisitingToday() {
+        return await this.monitorService.getUsersVisitingToday();
     }
 }

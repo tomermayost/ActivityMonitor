@@ -16,15 +16,40 @@ export class DatabaseService {
         return await this.eventModel.find().exec();
     }
 
-    async getEventCountByUser() {
+    async getEventCountByUser(pagination?: { skip?: number, limit?: number }) {
         return await this.eventModel.aggregate([
             { $match: {} },
-            { $group: { _id: '$user', total: { $sum: 1 } } },
-            { $project: { 'user': '$_id', 'total': 1, '_id': 0 } }
+            { $group: { _id: '$user', events: { $sum: 1 } } },
+            { $project: { 'user': '$_id', 'events': 1, '_id': 0 } },
+            { $sort: { events: -1 } },
+            { $skip: pagination && pagination.skip ? pagination.skip : 0 },
+            { $limit: pagination && pagination.limit ? pagination.limit : 1000 },
         ]);
     }
 
-    async getAllEvents() {
-        return await this.eventModel.find().exec();
+    async getAvgEventsPerMinute() {
+        const [res] = await this.eventModel.aggregate([
+            {
+                $group: {
+                    _id: { $dateTrunc: { date: '$timestamp', unit: "minute", binSize: 1 } },
+                    count: { $sum: 1 }
+                }
+
+            },
+            { $group: { _id: null, avg_epm: { $avg: "$count" } } },
+            { $project: { '_id': 0 } },
+
+        ]);
+        return res;
+    }
+
+    async getUsersVisitsSince(date: Date) {
+        const [res] = await this.eventModel.aggregate([
+            { $match: { 'timestamp': { $gte: date } } },
+            { $group: { _id: '$user' } },
+            { $group: { _id: null, count: { $sum: 1 } } },
+            { $project: { 'users_visiting_today': '$count', _id: 0 } },
+        ])
+        return res;
     }
 }

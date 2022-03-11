@@ -11,7 +11,7 @@ export class MonitorService {
         private dbServeice: DatabaseService
     ) { }
 
-    async registerEvent(dto: EventDto) {
+    async queueEvent(dto: EventDto) {
         try {
             enrichEventWithTimestamp();
             await this.eventsProducer.produceEvent(dto)
@@ -25,11 +25,16 @@ export class MonitorService {
         }
     }
 
-    async getEvents() {
-        return await this.dbServeice.getEventCountByUser();
+    async getEventsPerUser(pagination?: { skip?: number, limit?: number }) {
+        return await this.dbServeice.getEventCountByUser(pagination);
     }
 
-    async getAllEvents() {
-        return await this.dbServeice.getAllEvents();
+    async getAvgEventsPerMinute() {
+        return await this.dbServeice.getAvgEventsPerMinute()
+    }
+
+    async getUsersVisitingToday() {
+        const starOfDay = new Date(new Date().setUTCHours(0, 0, 0, 0));
+        return await this.dbServeice.getUsersVisitsSince(starOfDay);
     }
 }
