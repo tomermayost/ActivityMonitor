@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
+
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
@@ -15,10 +16,16 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('register event', () => {
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+      .post('/api/monitor/event')
+      .send({
+        type: "login",
+        page: "google.com",
+        user: "john",
+        element_id: "1234"
+      })
+      .expect(201);
   });
+
 });
