@@ -16,9 +16,9 @@ export class DatabaseService {
         return await this.eventModel.find().exec();
     }
 
-    async getEventCountByUser(pagination?: { skip?: number, limit?: number }) {
+    async getEventCountByUser(startDate: Date, pagination?: { skip?: number, limit?: number }) {
         return await this.eventModel.aggregate([
-            { $match: {} },
+            { $match: { 'timestamp': { $gte: startDate } } },
             { $group: { _id: '$user', events: { $sum: 1 } } },
             { $project: { 'user': '$_id', 'events': 1, '_id': 0 } },
             { $sort: { events: -1 } },
@@ -43,9 +43,9 @@ export class DatabaseService {
         return res;
     }
 
-    async getUsersVisitsSince(date: Date) {
+    async getUsersVisitsSince(startDate: Date) {
         const [res] = await this.eventModel.aggregate([
-            { $match: { 'timestamp': { $gte: date } } },
+            { $match: { 'timestamp': { $gte: startDate } } },
             { $group: { _id: '$user' } },
             { $group: { _id: null, count: { $sum: 1 } } },
             { $project: { 'users_visiting_today': '$count', _id: 0 } },

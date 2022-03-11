@@ -26,7 +26,8 @@ export class MonitorService {
     }
 
     async getEventsPerUser(pagination?: { skip?: number, limit?: number }) {
-        return await this.dbServeice.getEventCountByUser(pagination);
+        const startOfDay = this.getStartOfDay()
+        return await this.dbServeice.getEventCountByUser(startOfDay, pagination);
     }
 
     async getAvgEventsPerMinute() {
@@ -34,7 +35,11 @@ export class MonitorService {
     }
 
     async getUsersVisitingToday() {
-        const starOfDay = new Date(new Date().setUTCHours(0, 0, 0, 0));
-        return await this.dbServeice.getUsersVisitsSince(starOfDay);
+        const startOfDay = this.getStartOfDay()
+        return await this.dbServeice.getUsersVisitsSince(startOfDay);
+    }
+
+    private getStartOfDay() {
+        return new Date(new Date().setUTCHours(0, 0, 0, 0));
     }
 }
