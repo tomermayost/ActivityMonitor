@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseService } from './database/database.service';
 import { Event, EventSchema } from './database/schema/event.schema';
 import { DatabaseModule } from './database/database.module';
+import { Queues } from './utils/queues.enum';
 
 
 @Module({
@@ -20,7 +21,7 @@ import { DatabaseModule } from './database/database.module';
       }
     }),
     BullModule.registerQueue({
-      name: process.env.JOB_QUEUE_NAME,
+      name: Queues.EventsQueue,
     }),
     MongooseModule.forRoot(process.env.DATABASE_URL),
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),

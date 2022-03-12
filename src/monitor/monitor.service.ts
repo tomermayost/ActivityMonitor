@@ -31,7 +31,8 @@ export class MonitorService {
     }
 
     async getAvgEventsPerMinute() {
-        return await this.dbServeice.getAvgEventsPerMinute()
+        const startOfDay = this.getStartOfDay()
+        return await this.dbServeice.getAvgEventsPerMinuteSince(startOfDay)
     }
 
     async getUsersVisitingToday() {
@@ -40,6 +41,8 @@ export class MonitorService {
     }
 
     private getStartOfDay() {
-        return new Date(new Date().setUTCHours(0, 0, 0, 0));
+        const startOfDay = new Date()
+        startOfDay.setUTCHours(0, 0, 0, 0);
+        return startOfDay;
     }
 }

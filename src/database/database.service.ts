@@ -27,20 +27,20 @@ export class DatabaseService {
         ]);
     }
 
-    async getAvgEventsPerMinute() {
+    async getAvgEventsPerMinuteSince(startDate: Date) {
         const [res] = await this.eventModel.aggregate([
+            { $match: { 'timestamp': { $gte: startDate } } },
             {
                 $group: {
-                    _id: { $dateTrunc: { date: '$timestamp', unit: "minute", binSize: 1 } },
+                    _id: { $dateTrunc: { date: '$timestamp', unit: 'minute', binSize: 1 } },
                     count: { $sum: 1 }
                 }
-
             },
-            { $group: { _id: null, avg_epm: { $avg: "$count" } } },
+            { $group: { _id: null, avg_epm: { $avg: '$count' } } },
             { $project: { '_id': 0 } },
 
         ]);
-        return res;
+        return res ? res : { 'avg_epm': 0 };
     }
 
     async getUsersVisitsSince(startDate: Date) {
@@ -50,6 +50,10 @@ export class DatabaseService {
             { $group: { _id: null, count: { $sum: 1 } } },
             { $project: { 'users_visiting_today': '$count', _id: 0 } },
         ])
-        return res;
+        return res ? res : { 'users_visiting_today': 0 };
+    }
+
+    async clearDB() { // for tests purpuses 
+        await this.eventModel.deleteMany();
     }
 }

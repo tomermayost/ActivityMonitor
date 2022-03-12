@@ -6,11 +6,12 @@ import { DatabaseService } from '../database/database.service';
 import { Event, EventSchema } from '../database/schema/event.schema';
 import { MonitorController } from './monitor.controller';
 import { MonitorService } from './monitor.service';
+import { Queues } from '../utils/queues.enum';
 
 @Module({
   imports: [
     BullModule.registerQueue({
-      name: 'events',
+      name: Queues.EventsQueue,
     }),
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }])
   ],
