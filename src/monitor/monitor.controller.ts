@@ -8,8 +8,7 @@ export class MonitorController {
 
     @Post('events')
     async registerEvent(@Body() dto: EventDto) {
-        await this.monitorService.queueEvent(dto);
-        return dto;
+        return await this.monitorService.queueEvent(dto);
     }
 
     @Get('events/user')

@@ -12,17 +12,14 @@ export class MonitorService {
     ) { }
 
     async queueEvent(dto: EventDto) {
-        try {
-            enrichEventWithTimestamp();
-            await this.eventsProducer.produceEvent(dto)
-        } catch (err) {
-            console.log(err)
-            throw new InternalServerErrorException("something went wrong.. please check the logs for further details");
-        }
+
+        enrichEventWithTimestamp();
+        await this.eventsProducer.produceEvent(dto)
 
         function enrichEventWithTimestamp() {
             dto.timestamp = new Date();
         }
+        return dto;
     }
 
     async getEventsPerUser(pagination?: { skip?: number, limit?: number }) {
