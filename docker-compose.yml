@@ -30,12 +30,32 @@ services:
       MONGO_INITDB_DATABASE: appdb
     networks:
       - webnet
+  mongodb-test:
+    image: mongo
+    container_name: mongodb-test
+    ports:
+      - 27018:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: testdb
+    networks:
+      - webnet
   redis:
     image: redis:alpine
     container_name: redis
     restart: always
     ports:
       - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    networks:
+      - webnet
+  redis-test:
+    image: redis:alpine
+    container_name: redis-test
+    restart: always
+    ports:
+      - '6380:6379'
     command: redis-server --save 20 1 --loglevel warning
     networks:
       - webnet
